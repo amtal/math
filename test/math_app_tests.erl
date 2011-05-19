@@ -1,6 +1,7 @@
 -module(math_app_tests).
--export([all_tests_/0]).
+-include_lib("eunit/include/eunit.hrl").
+-compile(export_all).
 
-all_tests() ->
-    [ math_monoid_tests:test/0
+math_app_test_() ->
+    [ fun math_monoid_tests:test/0
     ].

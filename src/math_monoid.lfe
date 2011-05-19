@@ -39,7 +39,7 @@
 ;;;
 ;;; Equivalent to (mod):mempty(), included for completeness. Could try and
 ;;; implement monoid extensions for lists, dict, sets, orddicts, etc..?
-(defun empty (mod) (: mod mempty))
+(defun empty (mod) (call mod 'mempty))
 
 ;;; Merge two monoids.
 (defun append (a b) 
@@ -51,7 +51,7 @@
 ;;; Merge a list of monoids into a singleton. Returns 'empty on empty list.
 (defun concat 
   (('[]) 'empty)
-  (((cons m ms)) (: lists foldl (funcall (element 1 m) 'mappend 2) m ms)))
+  (((cons m ms)) (: lists foldl (fun append 2) m ms)))
 
 (defun behaviour_info 
   (('callbacks) '[#(mempty 0) #(mappend 2)])

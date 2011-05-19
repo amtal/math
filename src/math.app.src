@@ -1,0 +1,7 @@
+{application, math,
+  [ {description, "Primitives for polymorphic calculations."}
+  , {vsn, git}
+  , {modules, [math_monoid]}
+  , {registered, []}
+  , {applications, [kernel,stdlib]}
+  ]}.
