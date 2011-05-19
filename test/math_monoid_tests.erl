@@ -20,9 +20,9 @@ test() ->
     X1 = ?M:empty(?MODULE),
     X2 = ?M:append(value(5),X1),
     Vs = lists:map(fun value/1, [1,2,3,4,5]),
-    X3 = ?M:concat([X2|Vs]),
+    {ok,X3} = ?M:concat([X2|Vs]),
     % confirm min/max
     {?MODULE,1,5} = X3,
     % test empty concat - in a static typed language
-    % it would return mempty, here it soft-errors
-    empty = ?M:concat([]).
+    % it would return mempty, here it errors
+    ok = try ?M:concat([]) catch error:badarg->ok end.

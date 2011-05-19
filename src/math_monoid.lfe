@@ -48,10 +48,13 @@
     (orelse (== ma mb) (error #('mismatching_types a b)))
     (call ma 'mappend a b)))
 
-;;; Merge a list of monoids into a singleton. Returns 'empty on empty list.
+;;; Merge a list of monoids into a singleton. 
+;;;
+;;; Errors out on empty list (can't resolve type). If worried about empty
+;;; lists, cons on an identity element.
 (defun concat 
-  (('[]) 'empty)
-  (((cons m ms)) (: lists foldl (fun append 2) m ms)))
+  (('[]) (error 'badarg))
+  (((cons m ms)) (tuple 'ok (: lists foldl (fun append 2) m ms))))
 
 (defun behaviour_info 
   (('callbacks) '[#(mempty 0) #(mappend 2)])
