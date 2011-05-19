@@ -4,8 +4,12 @@
 -export([mempty/0, mappend/2]).
 
 %% A simple monoid. Mergeable min-max statistics.
+%%
+%% Note that the definition of mappend/2 ensures both values are of the same
+%% type. (This can be useful if a heterogenous list is passed to concat by
+%% accident.)
 mempty() -> {?MODULE,undefined,undefined}.
-mappend({?MODULE,A,B},{?MODULE,X,Y}) ->
+mappend({?MODULE=M,A,B},{M,X,Y}) ->
     {?MODULE,choose(A,X,min),choose(B,Y,max)}.
 % where
     choose(undefined,X,_) -> X;

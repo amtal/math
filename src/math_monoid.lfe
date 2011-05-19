@@ -42,11 +42,10 @@
 (defun empty (mod) (call mod 'mempty))
 
 ;;; Merge two monoids.
-(defun append (a b) 
-  (let ((ma (element 1 a))
-        (mb (element 1 b)))
-    (orelse (== ma mb) (error #('mismatching_types a b)))
-    (call ma 'mappend a b)))
+;;;
+;;; It is good practice for monoid implementation of mappend/2 to fail to match
+;;; a function clause, if arguments are the wrong type.
+(defun append (a b) (call (element 1 a) 'mappend a b))
 
 ;;; Merge a list of monoids into a singleton. 
 ;;;
