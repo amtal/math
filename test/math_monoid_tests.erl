@@ -31,7 +31,7 @@ usage() ->
     X1 = ?M:empty(?MODULE),
     X2 = ?M:append(value(5),X1),
     Vs = lists:map(fun value/1, [1,2,3,4,5]),
-    {ok,X3} = ?M:concat([X2|Vs]),
+    X3 = ?M:concat([X2|Vs]),
     % confirm min/max
     {?MODULE,1,5} = X3,
     % test empty concat - in a static typed language

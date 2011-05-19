@@ -63,7 +63,7 @@
 ;;; lists, cons on an identity element.
 (defun concat 
   (('[]) (error 'badarg))
-  (((cons m ms)) (tuple 'ok (: lists foldl (fun append 2) m ms))))
+  (((cons m ms)) (: lists foldl (fun append 2) m ms)))
 
 (defun behaviour_info 
   (('callbacks) '[#(mempty 0) #(mappend 2)])
