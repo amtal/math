@@ -1,0 +1,15 @@
+There's a couple of tricks I want to try.
+
+
+One, is generic behaviours that dispatch to specific implementations based on the atom tag of a data type. Should work nicely for monoids and other simple stuff.
+
+
+Another, is taking the idea a step further by creating several alternate arithmetic operator implementations. I'm thinking rationals, complex, and maybe polynomials for laughs. The first one will be useful, at least...
+
+The second idea is driven by LFE letting you override operators really easy. You can import them from a specific module, or do a local override (with or without a macro).
+
+I'm curious how far this idea can be taken. Can you write a histogram that works on any type that's a field - and then make that histogram a field itself, and construct a histogram of histograms?
+
+
+
+If the code works well, it'll play a significant part in an upcoming metrics library.
