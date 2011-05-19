@@ -3,5 +3,5 @@
 -compile(export_all).
 
 math_app_test_() ->
-    [ fun math_monoid_tests:test/0
+    [ math_monoid_tests:tests()
     ].

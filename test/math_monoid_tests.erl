@@ -1,7 +1,14 @@
 -module(math_monoid_tests).
--export([test/0]).
+-export([tests/0]).
 -behaviour(math_monoid).
 -export([mempty/0, mappend/2]).
+
+tests() ->
+    [ fun usage/0
+    , fun closure/0
+    , fun associativity/0
+    , fun identity/0
+    ].
 
 %% A simple monoid. Mergeable min-max statistics.
 %%
@@ -19,7 +26,7 @@ mappend({?MODULE=M,A,B},{M,X,Y}) ->
 value(X) -> {?MODULE,X,X}.
 
 -define(M,math_monoid).
-test() ->
+usage() ->
     % take some readings
     X1 = ?M:empty(?MODULE),
     X2 = ?M:append(value(5),X1),
@@ -30,3 +37,17 @@ test() ->
     % test empty concat - in a static typed language
     % it would return mempty, here it errors
     ok = try ?M:concat([]) catch error:badarg->ok end.
+
+closure() -> 
+    true = ?M:is(?M:append(value(1),value(2))).
+
+associativity() ->
+    [A,B,C] = [value(X)||X<-[1,2,3]],
+    Eq = ?M:append(?M:append(A,B), C),
+    Eq = ?M:append(A, ?M:append(B,C)).
+
+identity() ->
+    X = value(5),
+    X = ?M:append(?M:empty(?MODULE),X),
+    X = ?M:append(X,?M:empty(?MODULE)).
+

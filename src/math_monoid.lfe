@@ -32,6 +32,7 @@
 (defmodule math_monoid (export 
   (empty 1)  ; identity value of specific type
   (append 2) ; merge two monoids into one
+  (is 1)     ; tests whether structure belongs to monoid-module
   (concat 1) ; collapse a list of monoids into one
   (behaviour_info 1)))
 
@@ -46,6 +47,15 @@
 ;;; It is good practice for monoid implementation of mappend/2 to fail to match
 ;;; a function clause, if arguments are the wrong type.
 (defun append (a b) (call (element 1 a) 'mappend a b))
+
+;;; Monoid test.
+(defun is 
+  ((tup) (when (is_tuple tup))
+   (let* ((mname (element 1 tup))
+          (exports (call mname 'module_info 'exports)))
+     (and (: lists member #(mempty 0) exports)
+          (: lists member #(mappend 2) exports))))
+  ((_) 'false))
 
 ;;; Merge a list of monoids into a singleton. 
 ;;;
