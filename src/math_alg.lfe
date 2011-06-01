@@ -1,13 +1,39 @@
 ;; Utility module.
 (defmodule math_alg
-  (export (gcd 2) (fraction 2)))
+  (export (gcd 2) (gcd 1) (fraction 2)))
 
 ;; Euclid's Algorithm
+;;
+;; Handles negative inputs. Will probably hang on floats.
 (defun gcd
-  ((0 n) n) ; GCF of two numbers doesn't change if the
+  ((0 n) n) ; GCD of two numbers doesn't change if the
   ((n 0) n) ; smaller is subtracted from the larger
+  ((a b) (when (< (* a b) 0)) 
+    (* -1 (gcd (abs a) (abs b))))
   ((a b) (if (> a b) (gcd (- a b) b)
                      (gcd (- b a) a))))
+
+;; The same, generalized for a list of numbers.
+;;
+;; Ignores zeroes; nobody would do that, though.
+(defun gcd (ns)
+  (let* ((sign (if (: lists all (fun neg-or-zero 1) ns) 
+                 -1 1))
+         (positive (lc ((<- n (when (/= 0 n)) ns)) 
+                       (abs n)))
+         (result (gcd-reduce positive)))
+    (* sign result)))
+
+(defun neg-or-zero (n) (=< n 0))
+
+(defun gcd-reduce (ns)
+  (let* ((lowest (: lists min ns)))
+    (case (cons lowest
+                (lc ((<- n (when (/= n lowest))ns)) 
+                    (- n lowest)))
+      ((cons n '[]) n)
+      (ns (gcd-reduce ns)))))
+         
 
 
 ;; Rational approximation to given real number.
