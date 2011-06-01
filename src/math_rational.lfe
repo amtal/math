@@ -24,7 +24,7 @@
 (defun new 
   ((num den) (when (/= 0 den) (is_integer num) (is_integer den))
              (rat num den))
-  ((list* args) (: erlang error 'badarg args)))
+  ((num den) (: erlang error 'badarg `(,num ,den))))
 
 ;; Rational field ops:
 
