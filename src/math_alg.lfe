@@ -1,5 +1,6 @@
+;; Utility module.
 (defmodule math_alg
-  (export (gcd 2) (rat_approx 2)))
+  (export (gcd 2) (fraction 2)))
 
 ;; Euclid's Algorithm
 (defun gcd
@@ -17,7 +18,7 @@
 ;; continuous fraction representation of the target number.
 ;;
 ;; Max denominator size affects readability and accuracy.
-(defun rat_approx (flt max-den) 
+(defun fraction (flt max-den) 
   (case (catch (rat_approx 1 0 0 1 flt (trunc flt) max-den))
     ((tuple 'approx a b) (if (< (get-err flt a) 
                                 (get-err flt b)) 
