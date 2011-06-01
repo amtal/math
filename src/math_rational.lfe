@@ -17,11 +17,14 @@
   ((f) (when (is_float f)) 
        (cond ((?= (cons num den) 
                   (: math_alg fraction f #xFFFFFF)) ; what's a good precision?
-              (rat num den)))))                     ; error cap instead?
+              (rat num den))))                      ; error cap instead?
+  ((e) (: erlang error 'badarg `(,e))))
 
 ;; Construct rational from numerator + denominator.
-(defun new ((num den) (when (/= 0 den))
-  (rat num den)))
+(defun new 
+  ((num den) (when (/= 0 den) (is_integer num) (is_integer den))
+             (rat num den))
+  ((list* args) (: erlang error 'badarg args)))
 
 ;; Rational field ops:
 
@@ -46,4 +49,3 @@
 ;; See http://en.wikipedia.org/wiki/Mil%C3%BC for history.
 (defun pi () 
   (rat 355 113))
-
