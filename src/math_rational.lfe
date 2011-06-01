@@ -6,7 +6,7 @@
           (+ 2) (- 2) (* 2) (/ 2)
           (pi 0))
   (behaviour math_number)
-  (import (rename erlang ((+ 2) :+) ((- 2) :-) ((* 2) :*) ((/ 2) :/))))
+  (import (rename erlang ((+ 2) :+) ((- 2) :-) ((* 2) :*))))
 
 (defmacro rat (a b) `(tuple 'math_rational ,a ,b))
 
@@ -16,19 +16,29 @@
        (rat n 1))
   ((f) (when (is_float f)) 
        (cond ((?= (cons num den) 
-                  (: math_alg fraction f)) 
-              (rat num den)))))
+                  (: math_alg fraction f #xFFFFFF)) ; what's a good precision?
+              (rat num den)))))                     ; error cap instead?
 
 ;; Construct rational from numerator + denominator.
-(defun new (num den) 
-  (rat num den)) 
+(defun new ((num den) (when (/= 0 den))
+  (rat num den)))
 
-(defun + (((rat na da) (rat nb db)) ;(+ na nb)))
-  (rat (:+ (:* na db) (:* nb da)) 
-       (:* da db))))
-(defun - (a b) (: erlang - a b))
-(defun * (a b) (: erlang * a b))
-(defun / (a b) (: erlang / a b))
+;; Rational field ops:
+
+(defun + (((rat a b) (rat x y))
+  (reduce (rat (:+ (:* a y) (:* x b)) (:* x y)))))
+(defun - (((rat a b) (rat x y))
+  (reduce (rat (:- (:* a y) (:* x b)) (:* x y)))))
+(defun * (((rat a b) (rat x y))
+  (reduce (rat (:* a x) (:* b y)))))
+(defun / (((rat a b) (rat x y))
+  (reduce (rat (:* x a) (:* y b)))))
+
+;; Simplify a fraction by factoring out any GCD.
+(defun reduce (((rat a b)) ; TODO: why's there a compile warning here?
+  (cond ((== 0 a) (rat 0 b))  
+        ((?= gcd (: math_alg gcd a b))
+         (rat (div a gcd) (div b gcd))))))
 
 ;; Zu's ratio.
 ;;
