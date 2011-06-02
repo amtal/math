@@ -21,11 +21,14 @@
   ((f) (when (is_float f)) 
        (cond ((?= (cons num den) 
                   (: math_alg fraction f #xFFFFFF)) ; what's a good precision?
-              (rat num den)))))                     ; error cap instead?
+              (rat num den))))                      ; error cap instead?
+  ((e) (: erlang error 'badarg `(,e))))
 
 ;; Construct rational from numerator + denominator.
-(defun new ((num den) (when (/= 0 den))
-  (reduce (rat num den))))
+(defun new 
+  ((num den) (when (/= 0 den) (is_integer num) (is_integer den))
+             (reduce (rat num den)))
+  ((num den) (: erlang error 'badarg `(,num ,den))))
 
 ;; Fast type test.
 (defun is_rational 
@@ -67,4 +70,3 @@
   (cond ((== 0 a) (rat 0 b))  
         ((?= gcd (: math_alg gcd a b))
          (rat (div a gcd) (div b gcd))))))
-
