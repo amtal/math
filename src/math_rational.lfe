@@ -54,19 +54,21 @@
 
 ;; Rational field ops:
 (defun + ([(rat a b) (rat x y)]
-  (reduce (rat (:+ (:* a y) (:* x b)) (:* b y)))))
+  (reduce (rat (:+ (:* a y) (:* x b))
+               (:* b y)))))
 (defun - ([(rat a b) (rat x y)]
-  (reduce (rat (:- (:* a y) (:* x b)) (:* b y)))))
+  (reduce (rat (:- (:* a y) (:* x b)) 
+               (:* b y)))))
 (defun * ([(rat a b) (rat x y)]
   (reduce (rat (:* a x) (:* b y)))))
 (defun / ([(rat a b) (rat x y)]
-  (reduce (rat (:* x a) (:* y b)))))
+  (reduce (rat (:* a y) (:* b x)))))
 
 
 ;;; Internals:
 
 ;; Simplify a fraction by factoring out any GCD.
-(defun reduce ([(rat a b)] ; TODO: why's there a compile warning here?
-  (cond ((== 0 a) (rat 0 b))  
-        ((?= gcd (: math_alg gcd a b))
-         (rat (div a gcd) (div b gcd))))))
+(defun reduce 
+  ([(rat 0 _)] (rat 0 1))
+  ([(rat a b)] (let ((gcd (: math_alg gcd a b)))
+                 (rat (div a gcd) (div b gcd)))))
