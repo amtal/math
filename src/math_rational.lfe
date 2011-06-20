@@ -54,9 +54,9 @@
 
 ;; Rational field ops:
 (defun + (((rat a b) (rat x y))
-  (reduce (rat (:+ (:* a y) (:* x b)) (:* x y)))))
+  (reduce (rat (:+ (:* a y) (:* x b)) (:* b y)))))
 (defun - (((rat a b) (rat x y))
-  (reduce (rat (:- (:* a y) (:* x b)) (:* x y)))))
+  (reduce (rat (:- (:* a y) (:* x b)) (:* b y)))))
 (defun * (((rat a b) (rat x y))
   (reduce (rat (:* a x) (:* b y)))))
 (defun / (((rat a b) (rat x y))
