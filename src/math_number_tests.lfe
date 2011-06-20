@@ -1,6 +1,6 @@
 ;; Eunit doesn't compile .lfe files in test folder, will use manual method.
 ;; Whatever, this lets me run tests by hand while developing.
-(defmodule math_rational_tests 
+(defmodule math_number_tests 
   (export all)
   (import (from math_number (+ 2) (- 2) (/ 2) (* 2))))
 

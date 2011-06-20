@@ -8,6 +8,24 @@
           (is_number 1) (new 1))
   (import (rename erlang ((is_number 1) is_num))))
 
+;;; Exports:
+
+(defun + (a b) (op '+ a b))
+(defun - (a b) (op '- a b))
+(defun * (a b) (op '* a b))
+(defun / (a b) (op '/ a b))
+
+(defun is_number [n] 
+  (orelse (is_num n)
+          (andalso (is_tuple n) 
+                   (call (element 1 n) 'is_number n))))
+
+; Not sure if necessary:
+(defun new [n] n) 
+
+
+;;; Internal:
+
 
 ;; Multi-argument and macro... Think this exists in the dev branch
 ;; of LFE, need to update?
@@ -21,37 +39,23 @@
 ;;
 ;; Handles "numbers" using the 'erlang module, coercing them
 ;; to other types if operated on with a tagged tuple.
-(defmacro op [name]
-  `(defun ,name [a b]
-           ; normal numbers work as usual
-     (cond ((and (is_num a) (is_num b))
-            (: erlang ,name a b))
-           ; atom-tagged tuples can also be used, if the
-           ; tag is a module name that implements the interface
-           ((and (is_tuple a) (is_tuple b) 
-                 (== (element 1 a) (element 1 b)))
-            (call (element 1 a) ',name a b))
-           ; when arguments mismatch, but at least one tagged
-           ; tuple is present the other argument is coerced
-           ((and (is_tuple a) (is_num b))
-            (let* ((mod (element 1 a))
-                   (b (call mod 'new b)))
-              (call mod ',name a b)))
-           ((and (is_tuple b) (is_num a))
-            (let* ((mod (element 1 b))
-                   (a (call mod 'new a)))
-              (call mod ',name a b)))
-           ('true (error 'badarg `(,a ,b))))))
-
-
-(op +) (op -) (op *) (op /) 
-
-(defun is_number [n] 
-  (orelse (is_num n)
-          (andalso (is_tuple n) 
-                   (call (element 1 n) 'is_number n))))
-
-; Not sure if necessary:
-(defun new [n] n) 
-
-
+(defun op [name a b]
+  (cond ((and (is_num a) (is_num b))
+        ; normal numbers work as usual
+         (call 'erlang name a b))
+        ; atom-tagged tuples can be used, if the
+        ; tag is a module name that implements the interface
+        ((and (is_tuple a) (is_tuple b) 
+              (== (element 1 a) (element 1 b)))
+         (call (element 1 a) name a b))
+        ; when arguments mismatch, but at least one tagged
+        ; tuple is present the other argument is coerced
+        ((and (is_tuple a) (is_num b))
+         (let* ((mod (element 1 a))
+                (b (call mod 'new b)))
+           (call mod name a b)))
+        ((and (is_tuple b) (is_num a))
+         (let* ((mod (element 1 b))
+                (a (call mod 'new a)))
+           (call mod name a b)))
+        ('true (error 'badarg `(,a ,b)))))
