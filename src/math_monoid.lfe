@@ -40,31 +40,31 @@
 ;;;
 ;;; Equivalent to (mod):mempty(), included for completeness. Could try and
 ;;; implement monoid extensions for lists, dict, sets, orddicts, etc..?
-(defun empty (mod) (call mod 'mempty))
+(defun empty [mod] (call mod 'mempty))
 
 ;;; Merge two monoids.
 ;;;
 ;;; It is good practice for monoid implementation of mappend/2 to fail to match
 ;;; a function clause, if arguments are the wrong type.
-(defun append (a b) (call (element 1 a) 'mappend a b))
+(defun append [a b] (call (element 1 a) 'mappend a b))
 
 ;;; Monoid test.
 (defun is 
-  ((tup) (when (is_tuple tup))
+  ([tup] (when (is_tuple tup))
    (let* ((mname (element 1 tup))
           (exports (call mname 'module_info 'exports)))
      (and (: lists member #(mempty 0) exports)
           (: lists member #(mappend 2) exports))))
-  ((_) 'false))
+  ([_] 'false))
 
 ;;; Merge a list of monoids into a singleton. 
 ;;;
 ;;; Errors out on empty list (can't resolve type). If worried about empty
 ;;; lists, cons on an identity element.
 (defun concat 
-  (('[]) (error 'badarg))
-  (((cons m ms)) (: lists foldl (fun append 2) m ms)))
+  (['()] (error 'badarg))
+  ([(cons m ms)] (: lists foldl (fun append 2) m ms)))
 
 (defun behaviour_info 
-  (('callbacks) '[#(mempty 0) #(mappend 2)])
-  ((_) 'undefined))
+  (['callbacks] '[#(mempty 0) #(mappend 2)])
+  ([_] 'undefined))
